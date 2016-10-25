@@ -2,8 +2,8 @@ var htmlparser2 = require(".."),
     fs = require("fs"),
     path = require("path"),
     assert = require("assert"),
-	Parser = htmlparser2.Parser,
-	CollectingHandler = htmlparser2.CollectingHandler;
+    Parser = htmlparser2.Parser,
+    CollectingHandler = htmlparser2.CollectingHandler;
 
 exports.writeToParser = function(handler, options, data){
 	var parser = new Parser(handler, options);
@@ -29,8 +29,8 @@ exports.getEventCollector = function(cb){
 
 function eventReducer(events, arr){
 	if(arr[0] === "onerror" || arr[0] === "onend");
-	else if(arr[0] === "ontext" && events.length && events[events.length-1].event === "text"){
-		events[events.length-1].data[0] += arr[1];
+	else if(arr[0] === "ontext" && events.length && events[events.length - 1].event === "text"){
+		events[events.length - 1].data[0] += arr[1];
 	} else {
 		events.push({
 			event: arr[0].substr(2),

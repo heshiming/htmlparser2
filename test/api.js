@@ -60,4 +60,44 @@ describe("API", function(){
 		assert(processed);
 
 	});
+
+	it("should update the position", function(){
+		var p = new htmlparser2.Parser(null);
+
+		p.write("foo");
+
+		assert.equal(p.startIndex, 0);
+		assert.equal(p.endIndex, 2);
+
+		p.write("<bar>");
+
+		assert.equal(p.startIndex, 3);
+		assert.equal(p.endIndex, 7);
+	});
+
+	it("should update the position when a single tag is spread across multiple chunks", function(){
+		var p = new htmlparser2.Parser(null);
+
+		p.write("<div ");
+		p.write("foo=bar>");
+
+		assert.equal(p.startIndex, 0);
+		assert.equal(p.endIndex, 12);
+	});
+
+	it("should support custom tokenizer", function(){
+		function CustomTokenizer(options, cbs){
+			htmlparser2.Tokenizer.call(this, options, cbs);
+			return this;
+		}
+		CustomTokenizer.prototype = Object.create(htmlparser2.Tokenizer.prototype);
+		CustomTokenizer.prototype.constructor = CustomTokenizer;
+
+		var p = new htmlparser2.Parser({
+			onparserinit: function(parser){
+				assert(parser._tokenizer instanceof CustomTokenizer);
+			}
+		}, { Tokenizer: CustomTokenizer });
+		p.done();
+	});
 });
